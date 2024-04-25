@@ -1,0 +1,11 @@
+city,latitude,longitude,country,population,continent
+Tokyo,35.6895,139.6917,Japan,37833000,Asia
+New York,40.7128,-74.0060,USA,8804190,North America
+London,51.5074,-0.1278,UK,8982000,Europe
+Sydney,-33.8688,151.2093,Australia,5312000,Oceania
+Cairo,30.0444,31.2357,Egypt,9845000,Africa
+Buenos Aires,-34.6037,-58.3816,Argentina,3075646,South America
+Moscow,55.7558,37.6173,Russia,12692466,Europe
+Mumbai,19.0760,72.8777,India,20961000,Asia
+Paris,48.8566,2.3522,France,2141000,Europe
+Los Angeles,34.0522,-118.2437,USA,3979576,North America
