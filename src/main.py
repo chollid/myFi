@@ -88,3 +88,38 @@ def haversine(lat1, lon1, lat2, lon2):
     distance = constants.EARTH_RADIUS * c
     return distance
 
+
+
+## start up turtle graphics here
+# screen
+# screen width
+# coords ot match long ant lat
+# need background
+# pen - start
+# set speed
+# return these
+
+
+###init the game 
+## load data here
+# check for game loop being over 
+# find start city
+# where they've visited
+# award points
+
+## init game
+
+
+## init turtle graphs
+
+
+#### show nearby cities
+# show current? 
+# list of nearby cities
+
+## check the next city is not current city
+##sort ascending
+## grab distance bewteen both cities
+##check fuel amount is sufficient
+
+##show them all
