@@ -164,27 +164,56 @@ def display_nearby_cities():
 
    return nearby_cities
 
+# travel cost
+def calculate_travel_cost_money(distance):
+   """Calculates the monetary cost of travel - if any."""
+   # for now, it's distance based cost - can be more complex later
+   base_cost = 50  # base cost for any travel
+   cost_per_km = 0.1  # vost per kilometer
+   total_cost = base_cost + distance * cost_per_km
+   return total_cost
 
-### calc travel costs
-# base
-#cost per km
-#total cost = base + disatnce + cost per km
 
+def handle_player_choice(nearby_cities):
+   """Handles the player's choice for travel, currency exchange, or other actions."""
+   while True:
+       try:
+           choice = input("Enter your choice (number), 'x' to exchange currency, 's' to save, or 'q' to quit: ")
+           if choice.lower() == 'q':
+               game_state["game_over"] = True
+               return
+           elif choice.lower() == "x":
+               ## TODO: handle_currency_exchange()
+               return  # return main game loop after currency exchange
+           elif choice.lower() == "s":
+               ## TODO save_game()
+               print("Game saved!")
+           elif int(choice) >= 1 and int(choice) <= len(nearby_cities):
+               chosen_city, distance = nearby_cities[int(choice) - 1]
+               travel_to_city(chosen_city, distance)
+               return  # return to main game loop after traveling
+           else:
+               print("Invalid choice. Please enter a valid number or 'x', 's', or 'q'.")
+       except ValueError:
+           print("Invalid input. Please enter a number, 'x', 's', or 'q'.")
+           
+     
+# travel to a city      
+def travel_to_city(new_city, distance):
+    """Updates the game state when the player travels to a new city."""
+    fuel_cost = distance * constants.FUEL_CONSUMPTION_RATE
+    money_cost = calculate_travel_cost_money(distance)
 
-### handle player's choice of which city to visit
-##grab choice for 
-## loop through: 
-    ## - save - quit - or number of city to visit
-        ## if chooses valid city: 
-            ## run travel_to_city function (TOD0)
-            
-            
-#### travel to nearby city
-## account for fuel spent at some rate
-##account for money spent at some distance
-#set new city if above calculations agree
-## increment cities visited
-# increment score
-##update some game state
-## may want to handle currency change if in different country 
-## may add random event inside of city that decrements cash on hand
+    player_data["fuel"] -= fuel_cost
+    player_data["money"] -= money_cost
+    player_data["current_city"] = new_city
+    player_data["cities_visited"].append(new_city["city"])
+    player_data["score"] += 1
+
+    game_state["message"] = f"You traveled to {new_city['city']} ({new_city['country']})."
+    print(game_state["message"])
+
+    # must handle currency change if visiting a city in a different country
+    if new_city["country"] != player_data["current_city"]["country"]:
+        player_data["currency"] = #TODO: get currency for this country
+        print(f"You are now using {player_data['currency']} as currency.")
