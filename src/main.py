@@ -89,37 +89,77 @@ def haversine(lat1, lon1, lat2, lon2):
     return distance
 
 
+### initialize turtle graphics
+def initialize_turtle():
+   """Sets up turtle graphics screen and pen"""
+   screen = turtle.Screen()
+   screen.setup(constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT)
+   screen.setworldcoordinates(-180, -90, 180, 90)  #set coordinates to match longitude and latitude
+   screen.bgpic("world_map.gif")
 
-## start up turtle graphics here
-# screen
-# screen width
-# coords ot match long ant lat
-# need background
-# pen - start
-# set speed
-# return these
+   pen = turtle.Turtle()
+   pen.hideturtle()
+   pen.penup()
+   pen.speed(0)  # sets speed to fastest
+
+   return screen, pen
+
+###initialize game
+
+def initialize_game():
+   """Inits game state."""
+   load_city_data()
+
+   if not game_state["game_over"]:
+       # start random city
+       start_city = random.choice(cities_data)
+       player_data["current_city"] = start_city
+       player_data["cities_visited"].append(start_city["city"])
+       player_data["score"] += 1 # award points for starting
 
 
-###init the game 
-## load data here
-# check for game loop being over 
-# find start city
-# where they've visited
-# award points
-
-## init game
+       game_state["message"] = f"Welcome to Travel the World! You start in {start_city['city']}."
+       print(game_state["message"])
 
 
-## init turtle graphs
+initialize_game()
+
+#init turtle graphics
+if not game_state["game_over"]:
+   screen, pen = initialize_turtle()
 
 
-#### show nearby cities
-# show current? 
-# list of nearby cities
+turtle.mainloop()
 
-## check the next city is not current city
-##sort ascending
-## grab distance bewteen both cities
-##check fuel amount is sufficient
 
-##show them all
+def display_nearby_cities():
+   """Displays a list of nearby cities player can travel to."""
+   current_city = player_data["current_city"]
+   nearby_cities = []
+
+
+   for city in cities_data:
+       if city["city"] != current_city["city"]:
+           distance = haversine(
+               float(current_city["latitude"]),
+               float(current_city["longitude"]),
+               float(city["latitude"]),
+               float(city["longitude"])
+           )
+           if distance <= player_data["fuel"]:  # we will onyl consider cities within fuel range
+               nearby_cities.append((city, distance))
+
+
+   # sort by distance (asc)
+   nearby_cities.sort(key=lambda x: x[1])
+
+
+   print("Nearby cities:")
+   for i, (city, distance) in enumerate(nearby_cities):
+       travel_cost = distance * constants.FUEL_CONSUMPTION_RATE  # calculate travel cost
+       print(
+           f"{i + 1}. {city['city']} ({city['country']}) - {distance:.0f} km away"
+           f" (Cost: {travel_cost:.0f} fuel)"
+       )
+
+   return nearby_cities
