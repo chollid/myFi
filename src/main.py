@@ -163,3 +163,28 @@ def display_nearby_cities():
        )
 
    return nearby_cities
+
+
+### calc travel costs
+# base
+#cost per km
+#total cost = base + disatnce + cost per km
+
+
+### handle player's choice of which city to visit
+##grab choice for 
+## loop through: 
+    ## - save - quit - or number of city to visit
+        ## if chooses valid city: 
+            ## run travel_to_city function (TOD0)
+            
+            
+#### travel to nearby city
+## account for fuel spent at some rate
+##account for money spent at some distance
+#set new city if above calculations agree
+## increment cities visited
+# increment score
+##update some game state
+## may want to handle currency change if in different country 
+## may add random event inside of city that decrements cash on hand
