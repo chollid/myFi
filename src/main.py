@@ -183,7 +183,7 @@ def handle_player_choice(nearby_cities):
                game_state["game_over"] = True
                return
            elif choice.lower() == "x":
-               ## TODO: handle_currency_exchange()
+               handle_currency_exchange()
                return  # return main game loop after currency exchange
            elif choice.lower() == "s":
                ## TODO save_game()
@@ -213,7 +213,59 @@ def travel_to_city(new_city, distance):
     game_state["message"] = f"You traveled to {new_city['city']} ({new_city['country']})."
     print(game_state["message"])
 
-    # must handle currency change if visiting a city in a different country
+    # Handle currency change if visiting a city in a different country
     if new_city["country"] != player_data["current_city"]["country"]:
-        player_data["currency"] = #TODO: get currency for this country
+        player_data["currency"] = get_currency_for_country(new_city["country"])
         print(f"You are now using {player_data['currency']} as currency.")
+
+    ## TODO: create a random event
+    
+
+def handle_currency_exchange():
+    """Allows the player to exchange currency."""
+    print("Currency Exchange:")
+    print("Available currencies:")
+    for currency in exchange_rates:
+        if currency != player_data["currency"]:
+            print(f"- {currency}")
+
+    while True:
+        target_currency = input(
+            f"Enter the currency you want to exchange to (or 'b' to go back): "
+        ).upper()
+
+        if target_currency == "B":
+            return
+        elif target_currency not in exchange_rates:
+            print("Invalid currency. Please choose from the available currencies.")
+        else:
+            break
+
+    while True:
+        try:
+            amount_str = input(
+                f"Enter the amount of {player_data['currency']} you want to exchange (or 'b' to go back): "
+            )
+            if amount_str.lower() == "b":
+                return
+
+            amount = float(amount_str)
+            if amount <= 0:
+                print("Please enter a positive amount.")
+            else:
+                break
+        except ValueError:
+            print("Invalid. Please enter a number.")
+
+    # perform exchange
+    converted_amount = convert_currency(
+        amount, player_data["currency"], target_currency
+    )
+
+    player_data["money"] -= amount
+    player_data["money"] += converted_amount
+    player_data["currency"] = target_currency
+
+    print(
+        f"You exchanged {amount:.2f} {player_data['currency']} for {converted_amount:.2f} {target_currency}."
+    )
