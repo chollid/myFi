@@ -224,6 +224,7 @@ def travel_to_city(new_city, distance):
 def handle_currency_exchange():
     """Allows the player to exchange currency."""
     print("Currency Exchange:")
+    print(f"Your current balance: {player_data['money']:.2f} {player_data['currency']}")
     print("Available currencies:")
     for currency in exchange_rates:
         if currency != player_data["currency"]:
@@ -269,3 +270,71 @@ def handle_currency_exchange():
     print(
         f"You exchanged {amount:.2f} {player_data['currency']} for {converted_amount:.2f} {target_currency}."
     )
+    print(f"Your new balance: {player_data['money']:.2f} {player_data['currency']}")
+    
+    
+# get currency for specific country 
+def get_currency_for_country(country):
+    """Returns the currency used in a given country"""
+    if country in ["USA"]:
+        return "USD"
+    elif country in ["UK"]:
+        return "GBP"
+    elif country in ["Japan"]:
+        return "JPY"
+    elif country in ["Australia"]:
+        return "AUD"
+    elif country in ["India"]:
+        return "INR"
+    elif country in ["China"]:
+        return "CNY"
+    elif country in ["Russia"]:
+        return "RUB"
+    elif country in ["Brazil"]:
+        return "BRL"
+    elif country in ["South Africa"]:
+        return "ZAR"
+    elif country in ["France", "Germany", "Spain", "Italy", "Netherlands", "Belgium", "Portugal", "Greece", "Austria", "Finland", "Ireland"]:
+        return "EUR"
+    else:
+        return "USD"  # Default to USD if not found
+
+
+# save game
+def save_game(filename):
+    """Saves the current game state to a JSON file."""
+    with open(filename, 'w') as f:
+        json.dump({
+            "player_data": player_data,
+            "game_state": game_state
+        }, f)
+    print("Game saved successfully!")
+        
+def load_game(filename):
+    """Loads the game state from a JSON file."""
+    global player_data, game_state
+    try:
+        with open(filename, 'r') as f:
+            data = json.load(f)
+            player_data = data["player_data"]
+            game_state = data["game_state"]
+        print("Game loaded successfully!")
+    except FileNotFoundError:
+        print("Save file not found.")
+        
+        
+# main game loop
+while not game_state["game_over"]:
+    print("\n---")
+    nearby_cities = display_nearby_cities()
+    if not nearby_cities:
+        print("You are stranded! No cities within reach.")
+        game_state["game_over"] = True
+        break
+    handle_player_choice(nearby_cities)
+
+    if player_data["fuel"] <= 0:
+        game_state["game_over"] = True
+        game_state["message"] = "Game over! You ran out of fuel."
+
+print(game_state["message"])
